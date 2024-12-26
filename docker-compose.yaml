@@ -1,0 +1,31 @@
+name: 'Test Cronicle'
+
+networks:
+  cronicle:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.24.0.0/16
+          gateway: 172.24.0.1
+
+services:
+  cronicle:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cronicle:1.4
+    hostname: cronicle
+    networks:
+      cronicle:
+        ipv4_address: 172.24.0.2
+    ports:
+      - "3012:3012"
+    volumes:
+      - ./volumes/external_config:/opt/external_config
+      - ./volumes/data:/opt/cronicle/data
+    environment:
+      - CRONICLE_foreground=1
+      - CRONICLE_echo=1
+      - CRONICLE_color=1
+      - debug_level=1
+      - HOSTNAME=main
